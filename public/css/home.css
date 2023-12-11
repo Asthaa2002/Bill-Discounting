@@ -1,0 +1,241 @@
+/* Reset some default browser styles */
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&family=Philosopher&family=Satisfy&display=swap');
+body, h1, h2, p, ol, ul, li {
+    margin: 0;
+    padding: 0;
+    font-family: 'Philosopher', sans-serif;
+}
+
+/* Apply a background color to the body */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+.main_container{
+  margin: 60px;
+}
+/* Style the header */
+header {
+    background-color: rgb(8, 8, 43);
+    color: #fff;
+    text-align: center;
+    padding: 40px;
+}
+
+/* Style section headings */
+h2 {
+    color: #1e90ff;
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+/* Style content sections */
+.intro, .process, .faqs {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style FAQ questions and answers */
+.faqs li {
+    margin-bottom: 20px;
+}
+
+/* Style the footer */
+footer {
+    background-color: rgb(8, 8, 43);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+.whatsapp-data{
+  text-align: center; 
+    margin-top: 20px;
+}
+.whatspp-link{
+  cursor: pointer;
+    display: inline-block;
+    padding: 10px;  
+    border-radius: 5px;
+    margin-top: -80px;
+    width: 20%;
+}
+i.fa-brands.fa-whatsapp{
+  margin-left: 5px;
+  font-size: 60px;
+  color: #25D366;
+}
+
+/* Style links */
+a {
+    color: #1e90ff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.footer_main_content{
+    background-color: rgb(8, 8, 43);
+    color: white;
+    float: left;
+    width: 100%;
+    display: flex;
+}
+.footer_data{
+    width: 20%;
+     padding: 10px;
+     margin-left: 50px;
+  /* line-height: 30px; */
+}
+h1{
+    margin: 10px;
+}
+
+ul li{
+    margin: 17px;
+   
+}
+ul{
+    list-style: none;
+}
+
+.footer_main_section{
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+}
+h2{
+    margin: 20px;
+}
+.about_us_section{
+  width: 25%;
+  padding: 40px;
+  line-height: 25px;
+  border: 1px solid white;
+  margin: 20px;
+  box-shadow: 0px 0px 2px 2px #f3efef;
+
+
+}
+/* .main-page-carousel{
+    margin-top: 30px;
+} */
+
+.services_section{
+ width: 30%;
+ padding: 40px;
+ line-height: 30px;
+ border: 1px solid white;
+ margin: 20px;
+ box-shadow: 0px 0px 2px 2px #f3efef;
+}
+.contact_data_information{
+ width: 35%;
+ border: 1px solid white;
+ margin: 20px;
+ padding: 40px;
+ box-shadow: 0px 0px 2px 2px #f3efef;
+}
+
+ul li{
+    list-style: none;
+  line-height: 30px;
+}
+
+.media_links{
+    font-size: 40px;
+    color: red;
+    padding: 20px;
+}
+.fa-linkedin, .fa-instagram, .fa-twitter {
+    color: white;
+}
+
+/* carousel-images Container */
+.carousel-images {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .carousel-images:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Carousel Image */
+  .carousel-images img {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Carousel Content */
+  .carousel-images-content {
+    padding: 16px;
+  }
+  
+  .carousel-images-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .carousel-images-text {
+    font-size: 1em;
+    color: #555;
+  }
+  .billing_data{
+    display: flex;
+    margin: 100px;
+  }
+  .head_data{
+    width: 55%;
+  }
+  .font-heading{
+    font-size: 50px;
+    margin-bottom: 40px;
+  }
+  .image_content_bill{
+    width: 30%;
+  }
+  .view_data{
+    margin-top: 20px;
+  }
+  #big-return{
+    color: rgb(8, 8, 43);
+  }
+  .Opportunities_{
+  padding: 15px 20px;
+  width: 280px;
+  margin-top: 32px;
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: 2px solid rgb(46, 201, 193); 
+  border-radius: 5px;
+  color: white; 
+  background-color: rgb(46, 201, 193); 
+  }
+  .record_value{
+    display: flex;
+    width: 55%;
+    margin-left: 100px;
+    margin-bottom: 60px;
+  }
+
+  .record_data{
+width: 25%;
+font-weight: 700;
+font-size: 30px;
+  }
+h5{
+    margin-left: 100px;
+    margin-bottom: 20px;
+}

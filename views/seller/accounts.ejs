@@ -1,0 +1,40 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/nav.css">
+
+<!-- <link href="https://fonts.googleapis.com/css?family=Baloo+Bhai&display=swap" rel="stylesheet"> -->
+
+</head>
+<body>
+   
+        
+    <%- include('../includes/navigation.ejs') %>
+</nav>
+
+     
+     <main>
+        <h1>Welcome to the Accounts page</h1>
+        <!-- Display Wallet ID and Balance -->
+        <div class="wallet-info">
+          <h2>Wallet Information</h2>
+          <p>Wallet ID: <%= wallet._id %></p>
+          <p>Balance: <%= wallet.wallet_balance %></p>
+        </div>
+        <div>
+          <!-- Display Ledger Information -->
+<h2>Ledger Entries</h2>
+<ul>
+  <% ledger.forEach(entry => { %>
+    <li>
+      Opening Balance: <%= entry.opening_balance %>,
+      Closing Balance: <%= entry.closing_balance %>,
+      Amount: <%= entry.trx_amt %>,
+      Type: <%= entry.trx_type %>
+    </li>
+  <% }); %>
+</ul>
+        </div>
+      </main>
+     <%- include('../includes/end.ejs') %>
+
+
+

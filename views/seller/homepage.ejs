@@ -1,0 +1,186 @@
+ 
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/homepage.css">
+</head>
+<body>
+</head>
+<body>
+
+    <header class="main-header">
+        <button id="side-menu-toggle">Menu</button>
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list">
+                <li class="main-header__item" id="bill_icon">
+                    <i class="fa-regular fa-money-bill-1"></i>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a>
+                </li>
+
+                <% if (isAuthenticated) { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/seller/homepage' ? 'active' : '' %>" href="/seller/homepage">Seller</a>
+                </li>
+                
+                    <li class="main-header__item">
+                        <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
+                    </li>
+
+                    <% } %>
+                   
+                    
+                
+            </ul>
+            <ul class="main-header__item-list">
+              <% if (!isAuthenticated) { %>
+                    <li class="main-header__item">
+                        <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                    </li>
+                    <li class="main-header__item">
+                        <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
+                    </li>
+                    <% } else { %>
+              
+                    <li class="main-header__item">
+                        <form action="/logout" method="post">
+                            
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                    <% } %>
+            </ul>
+        </nav>
+    </header>
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <main>
+  <div class="add_invoice">
+  <a href="/invoices">Add Invoice</a>
+  </div>
+ 
+
+  <h2 >Previous Invoices</h2>
+
+  <div class="main_invoice_data">
+
+
+
+    <div class="invoice_data" >
+       <div>
+       <div class="invoice_row">
+      <div class="data" id="heading_invoice">
+        <h4 >Image</h4>
+     </div>
+        <div class="data"  id="heading_invoice">
+        <h4 >Invoice Number</h4>
+       </div>
+       <div class="data" id="heading_invoice">
+        <h4 >Invoice Amount</h4>
+       </div>
+       <div class="data" id="heading_invoice">
+        <h4 >Issue Date</h4>
+       </div>
+       <div class="data" id="heading_invoice">
+        <h4 >Invoice Status</h4>
+       </div>
+       <div class="data" id="heading_invoice">
+        <h4 >Edit</h4>
+       </div>
+       <div class="data" id="heading_invoice">
+        <h4 >Delete</h4>
+       </div>
+       
+     </div>
+       
+       </div>
+     </div>
+
+
+
+
+  <div class="invoice_data" >
+     <% if(previousInvoices.length > 0 ) { %>
+      <div>
+     <% for ( let invoices of previousInvoices) { %>
+      <div class="invoice_row">
+        <div class="data">
+          <% if (invoices.imageUrl) { %>
+            <!-- Displaying an image -->
+            <img src="/<%= invoices.imageUrl %>" alt="image" height="60" width="60"><br>
+            <a href="/invoices/<%= invoices._id %>">View Invoice</a>
+          <% } else if (invoices.file) { %>
+            <!-- Displaying a PDF using an iframe -->
+            <iframe src="<%= invoices.image %>" style="width: 60px; height: 60px;"></iframe>
+          <% } %>
+        </div>
+       <div class="data">
+       <h5 ><%= invoices.invoiceNumber %></h5>
+      </div>
+      <div class="data">
+       <h5 > <%= invoices.invoiceAmount %></h5>
+      </div>
+      <div class="data">
+       <h5 ><%= invoices.issueDate %></h5>
+      </div>
+      <div class="data">
+        <% if (invoices.status === 0) { %>
+          <!-- <span style="color: red;"> <h5 ><%= invoices.status %></h5></span> -->
+          <span style="color: red;"> <h5 >Pending</h5></span>
+          <% } else if (invoices.status === 1) { %>
+            <span style="color: green;"><h5 >Approved</h5></span> 
+          <% } %>
+       </div>
+      <div class="data">
+        <a href="/edit-invoice">
+          <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 4z"/>
+          </svg> Edit
+        </a>
+      </div>
+      <div class="data">
+        <form action="/delete/invoice/<%= invoices._id %>" method="POST">
+          
+                     
+          <button class="btn" type="submit">Delete</button>
+        </form>
+      </div>
+      <!-- Status:
+      <% if (invoices.status === 0) { %>
+        <span style="color: orange;">Saved</span>
+      <% } else if (invoices.status === 1) { %>
+        <span style="color: green;">Approved</span>
+      <% } else if (invoices.status === 2) { %>
+        <span style="color: blue;">Purchased</span>
+      <% } %> -->
+      
+    </div>
+      
+      </div>
+      <% } %>
+    </div>
+    <% } else { %>
+        <h1>No Products Found!</h1>
+        <% } %>
+      </div>
+
+    
+
+  
+</main>
+
+  <%- include('../includes/end.ejs') %>
+

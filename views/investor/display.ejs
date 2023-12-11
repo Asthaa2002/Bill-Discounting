@@ -1,0 +1,114 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/display.css">
+
+</head>
+<body>
+  <header class="main-header">
+    <button id="side-menu-toggle">Menu</button>
+    <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+            <li class="main-header__item" id="bill_icon">
+                <i class="fa-regular fa-money-bill-1"></i>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a>
+            </li>
+            <% if (isAuthenticated) { %>
+            <li class="main-header__item">
+                <a class="<%= path === '/displayInvoices' ? 'active' : '' %>" href="/displayInvoices">Investor</a>
+            </li>
+            
+                <li class="main-header__item">
+                    <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
+                </li>
+                <% } %>
+                
+            
+        </ul>
+        <ul class="main-header__item-list">
+          <% if (!isAuthenticated) { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
+                </li>
+                <% } else { %>
+          
+                <li class="main-header__item">
+                    <form action="/logout" method="post">
+                      
+                           
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+                <% } %>
+        </ul>
+    </nav>
+</header>
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+  <h2>Approved Invoices</h2>
+  
+  <% if (approvedInvoices.length > 0) { %>
+    <table class="invoice-table">
+      <tr>
+        <th>Image</th>
+        <th>Invoice Number</th>
+        <th>Invoice Amount</th>
+        <th>Issue Date</th>
+        <th>Invoice Status</th>
+        <th>Action</th> <!-- Add a new table header for the "Buy Now" button -->
+      </tr>
+      <% approvedInvoices.forEach(invoice => { %>
+        <tr>
+          <td>
+            <% if (invoice.imageUrl) { %>
+              <!-- Display an image -->
+              <img src="/<%= invoice.imageUrl %>" alt="Image" height="60" width="60">
+            <% } else if (invoice.file) { %>
+              <!-- Display a PDF using an iframe -->
+              <iframe src="<%= invoice.image %>" style="width: 60px; height: 60px;"></iframe>
+            <% } %>
+          </td>
+          <td><%= invoice.invoiceNumber %></td>
+          <td><%= invoice.invoiceAmount %></td>
+          <td><%= invoice.issueDate %></td>
+          <td style="color: green;">Approved</td>
+          <td>
+            <!-- Your existing code -->
+<td>
+  <form action="/buy-now/<%= invoice._id %>" method="POST"> <!-- Change the link to a form for POST request -->
+   
+                     <input type="text" name="seller_email" value="<%= invoice.seller_email %>" />
+                     <input type="text" name="buyNowPrice" value= "<%= invoice.buyNowPrice %>" />
+    <button type="submit" class="buy-now-button">Buy Now</button>
+  </form>
+</td>
+<!-- Your existing code -->
+
+              </td>
+        </tr>
+      <% }); %>
+    </table>
+  <% } else { %>
+    <h3>No approved invoices found.</h3>
+  <% } %>
+</main>
+
+<%- include('../includes/end.ejs') %>

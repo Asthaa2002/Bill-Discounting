@@ -1,0 +1,71 @@
+
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/invoices.css">
+
+<%- include('../includes/navigation.ejs')%>
+    </nav>
+
+    <main class="main-container">
+          <form  action="/invoices" method="POST" enctype="multipart/form-data">
+            <div >
+              <h3 >Invoice Form</h3>
+<div>
+  <div class="form-control">
+            <label for="invoiceNumber">Invoice Number:</label>
+            <input type="text"
+             id="invoiceNumber" name="invoiceNumber" required><br><br>
+            </div>
+           
+            <div class="form-control">
+            <label for="invoiceAmount">Invoice Amount:</label>
+            <input type="number" 
+            id="invoiceAmount" name="invoiceAmount" step="0.01"><br><br>
+            </div>
+           
+            <div class="form-control">
+            <label for="issueDate">Issue Date:</label>
+            <input type="date"
+             id="issueDate" name="issueDate" required><br><br>
+            </div>
+            
+            <div class="form-control">
+            <label for="dueDate">Due Date:</label>
+            <input type="date"
+             id="dueDate" name="dueDate" required><br><br>
+            </div>
+            
+            <div class="form-control">
+            <label for="buyNowPrice">Buy Now Price:</label>
+            <input type="number" 
+            id="buyNowPrice" name="buyNowPrice" step="0.01" required><br><br>
+            </div>
+            
+            <div class="form-control">
+            <label for="productName">Product Name:</label>
+            <input type="text"
+             id="productName" name="productName" required><br><br>
+            </div>
+            
+            <div class="form-control">
+            <label for="productDetails">Product Details:</label>
+            <textarea id="productDetails" name="productDetails" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-control" id="file_upload">
+            <label class="file_upload_label" for="file">Upload File </label>
+            <input type="file" 
+            id="image" name="file" accept="image/jpeg,image/png,image/jpg,application/pdf" required>
+          </div>
+        
+            <!-- Submit Button -->
+            <!-- <button class="btn" type="submit">Submit</button> -->
+           
+              <button  class="btn" type="submit">Submit </button>
+           
+            
+   
+        
+    </form>
+    </main>
+    <%- include('../includes/end.ejs') %>

@@ -1,0 +1,32 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/nav.css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+        </nav>
+        <main >
+            <h1><%= invoice.title %></h1>
+            
+            <div>
+                <% if (invoice.imageUrl) { %>
+                    <!-- Displaying an image -->
+                    <img src="/<%= invoice.imageUrl %>" alt="image" height="200" width="200"><br>
+      
+                  <% } else if (invoice.file) { %>
+                    <!-- Displaying a PDF using an iframe -->
+                    <iframe src="<%= invoice.image %>" style="width: 200px; height: 200px;"></iframe>
+     
+                      <% } %>
+            </div>
+            <div>
+                <h5 ><%= invoice.invoiceNumber %></h5>
+               </div>
+               <div >
+                <h5 > <%= invoice.invoiceAmount %></h5>
+               </div>
+            <h2><%= invoice.productName %></h2>
+            <p><%=  invoice.productDetails%></p>
+            
+        </main>
+        <%- include('../includes/end.ejs') %>
