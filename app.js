@@ -87,7 +87,6 @@ app.use( invoiceRoutes);
 app.use(errorController.get404);
 
 console.log('start main server !!--- ');
-console.log('start main server !!--- ');
 
 mongoose.connect(MONGODB_URI)
 .then(result => {
