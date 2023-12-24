@@ -31,6 +31,9 @@ router.get('/displayInvoices',isAuth, invoicesController.displayApprovedInvoices
 // router.get('/invoice/:invoiceId/payment', invoicesController.renderInvoicePayment);
 router.post('/buy-now/:invoiceId', isAuth,invoicesController.postBuyNow);
 
+router.post('/createOrder', invoicesController.createOrder);
+
+
 
 module.exports = router;
 

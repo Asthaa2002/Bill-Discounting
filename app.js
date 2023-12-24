@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const path = require('path')
 const bodyParser = require('body-parser');
@@ -9,6 +10,7 @@ const errorController = require('./controller/error');
 const User = require('./modals/user');
 // const User = require('../modals/user')
 const multer = require('multer');
+
 
 
 const MONGODB_URI = "mongodb+srv://kirtisri2002:kirtiAs54321@cluster0.5l7s2cy.mongodb.net/products?retryWrites=true&w=majority"

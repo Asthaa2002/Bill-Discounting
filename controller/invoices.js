@@ -1,3 +1,18 @@
+
+
+const Razorpay = require('razorpay'); 
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+
+const razorpayInstance = new Razorpay({
+    key_id: RAZORPAY_ID_KEY,
+    key_secret: RAZORPAY_SECRET_KEY
+});
+
+
+
+
+
+
 const Invoice = require('../modals/invoice');
 const Wallet = require('../modals/wallet');
 const Ledger = require('../modals/ledger');
@@ -81,10 +96,10 @@ exports.getAccounts = (req, res, next) => {
   const userEmail = req.user.email; // Assuming user email is stored in req.user.email after login
 
   Wallet.findOne({ user_email: userEmail }).then(wallet => {  
-    console.log('Wallet:', wallet);
+    // console.log('Wallet:', wallet);
  
     Ledger.find({ wallet_id: wallet._id }).then(ledger => {
-      console.log('Ledger:', ledger);
+      // console.log('Ledger:', ledger);
 
       const ejsObj = {
         path: "/accounts",
@@ -157,8 +172,8 @@ exports.postinvoice = (req, res,next) => {
   } = req.body;
   const seller_email = req.user.email;
   const image = req.file;
-console.log(req.body);
-console.log(image);
+// console.log(req.body);
+// console.log(image);
 const imageUrl = image.path;
 
 // let today = new Date().toString()
@@ -169,7 +184,7 @@ const imageUrl = image.path;
 
 // const imageUrl = `/images/${today}.jpg`;
 
-console.log('line 80=>',imageUrl)
+// console.log('line 80=>',imageUrl)
   const newInvoice = new Invoice({
     invoiceNumber:invoiceNumber,
     invoiceAmount:invoiceAmount,
@@ -188,7 +203,7 @@ console.log('line 80=>',imageUrl)
     .save()
     .then(result => {
       // console.log(result);
-      console.log('Created Invoice');
+      // console.log('Created Invoice');
       res.redirect('/seller/homepage');
     })
    // .then((savedInvoice) => {
@@ -222,7 +237,7 @@ exports.deleteInvoice = async (req, res, next) => {
     if (!removedInvoice) {
       return res.status(404).send('No Invoice found !!');
     }
-    console.log('Invoice deleted !!');
+    // console.log('Invoice deleted !!');
     res.redirect("/seller/homepage");
   } catch (error) {
     console.error(error);
@@ -251,10 +266,10 @@ exports.approveInvoice = async (req, res) => {
 // Controller for displaying approved invoices on the next page
 
 exports.displayApprovedInvoices = (req, res, next) => {
-  console.log("i m here")
+  // console.log("i m here")
   Invoice.find({ status: 1 })
     .then(approvedInvoices => {
-      console.log('line 206',approvedInvoices)
+      // console.log('line 206',approvedInvoices)
       res.render('investor/display', {
         approvedInvoices,
         path:"/displayInvoices",
@@ -310,49 +325,7 @@ exports.displayApprovedInvoices = (req, res, next) => {
 //   });
 // };
 
-// exports.postBuyNow = (req, res,next) => {
-//   console.log('astha',req.file);
-//   const {
-//     invoiceNumber,
-//     seller_email,
-//     amount
-//   } = req.body;
-//   const investor_email = req.user.email;
 
-// console.log(req.body);
-
-//   Wallet.find({user_email: seller_email}).then(w1=>{
-//     Wallet.find({user_email: investor_email}).then(w2=>{
-            
-//         w1.wallet_balance = w1.wallet_balance + amount
-//         w2.wallet_balance = w2.wallet_balance - amount
-//       w1.save().then(savew1=>{
-//         w2.save().then(savew2=>{
-//           console.log('it worked')
-//           Invoice.find({ invoiceNumber: invoiceNumber }).then(inv=>{
-//             inv.status = 2
-//             inv.save().then(saved=>{
-//               console.log('it worked')
-//             }).catch(err_01=>{
-//               console.log(err_01)
-//             })
-//           }).catch(err0=>{
-//             console.log(err0)
-//           })
-//         }).catch(err1=>{
-//           console.log(err1)
-//         })
-//       }).catch(err2=>{
-//         console.log(err2)
-//       })
-//   }).catch(err3=>{
-//     console.log(err3)
-//   })
-
-// }).catch(err4=>{
-//   console.log(err4)
-// })
-// };
 
 
 
@@ -364,9 +337,9 @@ exports.postBuyNow = async(req, res, next) => {
     const investor_email = req.user.email; // Assuming user email is available in req.user
     const invoiceId = req.params.invoiceId;
      // Assuming invoiceId is available in params
-     console.log('line 315',req.body);
-     console.log( 'line 316',req.params);
-     console.log( 'line 317',req.user);
+    //  console.log('line 315',req.body);
+    //  console.log( 'line 316',req.params);
+    //  console.log( 'line 317',req.user);
 
     const sellerWallet = await Wallet.findOne({ user_email: seller_email });
     const investorWallet = await Wallet.findOne({ user_email: investor_email });
@@ -411,7 +384,7 @@ exports.postBuyNow = async(req, res, next) => {
 
 
     await Promise.all([sellerWallet.save(), investorWallet.save()]);
-    console.log("i m here 2")
+    // console.log("i m here 2")
     await Promise.all([ledgerEntrySeller.save(), ledgerEntryInvestor.save()]);
 
 
@@ -432,6 +405,44 @@ exports.postBuyNow = async(req, res, next) => {
     res.status(500).send('Transaction failed');
   }
 };
+
+
+exports.createOrder = async(req,res)=>{
+  try {
+      const amount = req.body.amount*100
+      const options = {
+          amount: amount,
+          currency: 'INR',
+          receipt: 'razorUser@gmail.com'
+      }
+
+      razorpayInstance.orders.create(options, 
+          (err, order)=>{
+              if(!err){
+                  res.status(200).send({
+                      success:true,
+                      msg:'Order Created',
+                      order_id:order.id,
+                      amount:amount,
+                      key_id:RAZORPAY_ID_KEY,
+                      product_name:req.body.name,
+                      description:req.body.description,
+                      contact:"9694491634",
+                      name: "Kuldeep Chahar",
+                      email: "kuldeepchahar426@gmail.com"
+                  });
+              }
+              else{
+                  res.status(400).send({success:false,msg:'Something went wrong!'});
+              }
+          }
+      );
+
+  } catch (error) {
+      console.log(error.message);
+  }
+}
+
 
 
 
