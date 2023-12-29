@@ -14,12 +14,16 @@ router.get('/seller/homepage',isAuth,invoicesController.gethomepage);
 router.get('/buyer/list',isAuth,invoicesController.getlist); 
 
 router.get('/invoices',isAuth,invoicesController.getinvoices);
+router.get('/bid',isAuth,invoicesController.getbid);
+router.post('/bid/:invoiceId',isAuth,invoicesController.submitBid);
 
 router.post('/invoices',isAuth,invoicesController.postinvoice);
 router.get('/accounts',isAuth,invoicesController.getAccounts);
 // router.put('/invoices/:invoiceId', invoicesController.updateInvoiceStatus)
 router.post('/delete/invoice/:invoiceId',isAuth, invoicesController.deleteInvoice)
 router.get('/invoices/:invoiceId', isAuth,invoicesController.viewInvoice);
+
+// router.post('/bid', isAuth,invoicesController.placeBid);
 
 // upload.single('file')
 

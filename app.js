@@ -53,7 +53,7 @@ app.use('/images',express.static(path.join(__dirname,"images")));
 
 const authRoutes = require('./routes/auth');
 const invoiceRoutes = require('./routes/invoices');
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 try{
@@ -92,7 +92,7 @@ console.log('start main server !!--- ');
 
 mongoose.connect(MONGODB_URI)
 .then(result => {
-    app.listen(4000);
+    app.listen(3000);
 }).catch(err =>{
     console.log(err)
 })

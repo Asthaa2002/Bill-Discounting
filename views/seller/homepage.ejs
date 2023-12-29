@@ -142,7 +142,9 @@
           <span style="color: red;"> <h5 >Pending</h5></span>
           <% } else if (invoices.status === 1) { %>
             <span style="color: green;"><h5 >Approved</h5></span> 
-          <% } %>
+          <% } else if (invoices.status ===2) { %>
+            <span style="color: purple;"><h5 >Purchased</h5></span> 
+            <% } %>
        </div>
       <div class="data">
         <a href="/edit-invoice">

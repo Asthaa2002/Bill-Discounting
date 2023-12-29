@@ -9,13 +9,10 @@ const razorpayInstance = new Razorpay({
 });
 
 
-
-
-
-
 const Invoice = require('../modals/invoice');
 const Wallet = require('../modals/wallet');
 const Ledger = require('../modals/ledger');
+const Bid = require('../modals/bid');
 // const stripe = require('stripe')(STRIPE_SECRET_KEY);
 
 exports.getHome = (req,res,next) => {
@@ -150,6 +147,62 @@ exports.viewInvoice = (req, res) => {
       res.render('error');
     });
 };
+
+exports.getbid = (req,res,next)=>{
+  Invoice.find({ status: 1 })
+  .then(approvedInvoices => {
+    // console.log('line 206',approvedInvoices)
+    res.render('investor/bidform', {
+      approvedInvoices,
+      path:"/bid",
+      pageTitle: 'bid-form', 
+      isAuthenticated: req.session.isLoggedIn
+    });
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }); 
+}
+
+exports.submitBid = async (req, res) => {
+  const {invoiceId} = req.params; // Replace with the actual invoiceId
+  try {
+    const find = await Invoice.findById(invoiceId);
+    console.log('data =====> ', find);
+    
+    const { amount } = req.body;
+    const createNew = await Bid.create({
+      amount: amount,
+      
+    })
+
+    const result = await createNew.save()
+    console.log('bid saved ', result )
+    res.status(200).json({message: 'bid saved!!', result: result })
+    // Process the bid with the found invoice and bid amount
+
+    // Send a response or perform further actions
+  } catch (err) {
+    // Handle errors appropriately
+    console.error(err);
+    // Send an error response or redirect to an error page
+  }
+};
+
+
+  
+  // Invoice.findByIdAndUpdate(invoiceId, { status: 3 }, { new: true })
+  //     .then(updatedInvoice => {
+  //         if (!updatedInvoice) {
+  //             return res.status(404).json({ success: false, message: 'Invoice not found' });
+  //         }
+  //         res.status(200).json({ success: true, message: 'Bid submitted successfully', updatedInvoice });
+  //     })
+  //     .catch(error => {
+  //         console.error('Error submitting bid:', error);
+  //         res.status(500).json({ success: false, message: 'Failed to submit bid' });
+  //     });
 
 
 
@@ -394,8 +447,8 @@ exports.postBuyNow = async(req, res, next) => {
       return res.status(404).send('Invoice not found');
     }
 
-    // Assuming 'status: 2' represents a purchased status
     invoice.status = 2;
+   
     await invoice.save();
 
     // Redirect to accounts page after successful transaction
@@ -407,41 +460,48 @@ exports.postBuyNow = async(req, res, next) => {
 };
 
 
-exports.createOrder = async(req,res)=>{
+exports.createOrder = async (req, res) => {
   try {
-      const amount = req.body.amount*100
-      const options = {
-          amount: amount,
-          currency: 'INR',
-          receipt: 'razorUser@gmail.com'
-      }
+    const amount = req.body.amount;
+    const walletID = req.body.walletID;
+    const options = {
+      amount: 100 ,
+      currency: 'INR',
+      receipt: 'razorUser@gmail.com',
+    };
 
-      razorpayInstance.orders.create(options, 
-          (err, order)=>{
-              if(!err){
-                  res.status(200).send({
-                      success:true,
-                      msg:'Order Created',
-                      order_id:order.id,
-                      amount:amount,
-                      key_id:RAZORPAY_ID_KEY,
-                      product_name:req.body.name,
-                      description:req.body.description,
-                      contact:"9694491634",
-                      name: "Kuldeep Chahar",
-                      email: "kuldeepchahar426@gmail.com"
-                  });
-              }
-              else{
-                  res.status(400).send({success:false,msg:'Something went wrong!'});
-              }
-          }
-      );
+    console.log('line 415', amount)
 
+      const order = await razorpayInstance.orders.create(options);
+
+    console.log('line 416', order);
+    // const invoiceId = req.body.invoiceId;
+    // const updatedInvoice = await Invoice.findByIdAndUpdate(
+    //   invoiceId,
+    //   { status: 2 }, // Assuming '2' represents a successful payment status
+    //   { new: true } // To get the updated document
+    // );
+    const { id } = req.params;
+    const updatedInvoice = await Invoice.findByIdAndUpdate(id, { status: 2}, { new: true });
+
+
+
+    res.status(200).send({
+      success: true,
+      msg: 'Order Created',
+      order_id: order.id,
+      amount: amount,
+      key_id: RAZORPAY_ID_KEY,
+      contact: '9694491634',
+      name: 'Astha',
+      email: 'kuldeepchahar426@gmail.com',
+      updatedInvoice
+    });
   } catch (error) {
-      console.log(error.message);
+    console.log('Error:', error);
+    res.status(400).send({ success: false, msg: 'Something went wrong!' });
   }
-}
+};
 
 
 

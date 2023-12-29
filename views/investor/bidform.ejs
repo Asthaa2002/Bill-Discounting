@@ -1,0 +1,24 @@
+<main class="main-container">
+  <% if (approvedInvoices.length > 0) { %>
+    <table class="invoice-table">
+      <% approvedInvoices.forEach(invoice => { %>
+        <p>Invoice Number: <%= invoice.invoiceNumber %></p>
+        <p>Due Date: <%= invoice.dueDate %></p>
+        <input type="hidden" id="invoiceId" name="invoiceId" value="<%= invoice.invoiceId %>">
+      <% }); %>
+    </table>
+
+    <!-- Form for submitting bid -->
+    <form action="/bid/<%= approvedInvoices[0]._id %>" method="POST" enctype="multipart/form-data">
+      <input type="number" id="bidAmount" name="amount" placeholder="Enter Bid Amount">
+      <label for="agreeTerms">
+        <input type="checkbox" id="agreeTerms">
+        I agree to the bidding terms and conditions.
+      </label>
+      <button type="submit">Submit Bid</button>
+    </form>
+
+  <% } else { %>
+    <h3>No approved invoices found.</h3>
+  <% } %>
+</main>

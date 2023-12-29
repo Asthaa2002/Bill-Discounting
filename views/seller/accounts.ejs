@@ -18,6 +18,15 @@
           <h2>Wallet Information</h2>
           <p>Wallet ID: <%= wallet._id %></p>
           <p>Balance: <%= wallet.wallet_balance %></p>
+          <div style="display:inline-block">
+
+            <form class="pay-form">
+              <input type="hidden" name="name" value="Shoes">
+              <input type="hidden" name="amount"  required>
+              <input type="hidden" name="description" value="Shoes Buying">
+              <button type="submit">Recharge Your Wallet</button>
+            </form>
+          </div>
         </div>
         <div>
           <!-- Display Ledger Information -->
@@ -34,6 +43,7 @@
 </ul>
         </div>
       </main>
+
      <%- include('../includes/end.ejs') %>
 
 
