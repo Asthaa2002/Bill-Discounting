@@ -13,6 +13,7 @@ const Invoice = require('../modals/invoice');
 const Wallet = require('../modals/wallet');
 const Ledger = require('../modals/ledger');
 const Bid = require('../modals/bid');
+const User = require("../modals/user")
 // const stripe = require('stripe')(STRIPE_SECRET_KEY);
 
 exports.getHome = (req,res,next) => {
@@ -166,20 +167,26 @@ exports.getbid = (req,res,next)=>{
 }
 
 exports.submitBid = async (req, res) => {
-  const {invoiceId} = req.params; // Replace with the actual invoiceId
+  const {invoiceId} = req.params; 
+  // const investorId = req.params.investorId
+
   try {
     const find = await Invoice.findById(invoiceId);
-    console.log('data =====> ', find);
-    
+    const investor = await User.findOne({ role: 'investor' }, '_id');
+    const investorId = investor._id;
+    console.log('Investor ID:', investorId, invoiceId);
+   
     const { amount } = req.body;
     const createNew = await Bid.create({
       amount: amount,
-      
+      invoiceId: investorId,
+      investorId: investorId
     })
 
     const result = await createNew.save()
     console.log('bid saved ', result )
-    res.status(200).json({message: 'bid saved!!', result: result })
+    // res.status(200).json({message: 'bid saved!!', result: result })
+    res.redirect('/displayInvoices')
     // Process the bid with the found invoice and bid amount
 
     // Send a response or perform further actions

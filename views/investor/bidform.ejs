@@ -8,8 +8,7 @@
       <% }); %>
     </table>
 
-    <!-- Form for submitting bid -->
-    <form action="/bid/<%= approvedInvoices[0]._id %>" method="POST" enctype="multipart/form-data">
+  <form action="/bid/<%= approvedInvoices[0]._id %>" method="POST" enctype="multipart/form-data">
       <input type="number" id="bidAmount" name="amount" placeholder="Enter Bid Amount">
       <label for="agreeTerms">
         <input type="checkbox" id="agreeTerms">

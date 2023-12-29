@@ -16,9 +16,9 @@ const bidSchema = new mongoose.Schema({
     // required: true,
   },
   status: {
-    type: String,
-    enum: ['placed', 'accepted', 'rejected'], // Possible statuses for the bid
-    default: 'placed',
+    type: Number,
+    // enum: ['placed', 'accepted', 'rejected'], // Possible statuses for the bid
+    default: 3,
   },
   timestamp: {
     type: Date,

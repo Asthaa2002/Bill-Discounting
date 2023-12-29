@@ -116,7 +116,9 @@
                 <span style="color: green;"><h5 >Approved</h5></span> 
               <% }  else if (invoice.status === 2) { %>
                 <span style="color: purple;"><h5 >Purchased</h5></span> 
-                <% } %>
+                <% }else if (invoice.status === 3) { %>
+                  <span style="color: brown;"><h5 >Placed</h5></span>
+                  <% } %>
            </div>
         </td>
           <td>
