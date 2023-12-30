@@ -89,8 +89,12 @@
         <h4 >Issue Date</h4>
        </div>
        <div class="data" id="heading_invoice">
+        <h4 >Seller Info.</h4>
+       </div>
+       <div class="data" id="heading_invoice">
         <h4 >Invoice Status</h4>
        </div>
+       
       
        
      </div>
@@ -126,6 +130,9 @@
       <div class="data">
        <h5 ><%= invoices.issueDate %></h5>
       </div>
+      <div class="data">
+        <h5 ><%= invoices.seller_email %></h5>
+       </div>
       <div class="data">
         <% if (invoices.status === 0) { %>
           <!-- <span style="color: red;"> <h5 ><%= invoices.status %></h5></span> -->

@@ -89,7 +89,7 @@
         <th>Invoice Number</th>
         <th>Invoice Amount</th>
         <th>Issue Date</th>
-        <th>Invoice Status</th>
+        <!-- <th>Invoice Status</th> -->
         <th>Action</th> <!-- Add a new table header for the "Buy Now" button -->
       </tr>
       <% approvedInvoices.forEach(invoice => { %>
@@ -106,34 +106,41 @@
           <td><%= invoice.invoiceNumber %></td>
           <td><%= invoice.invoiceAmount %></td>
           <td><%= invoice.issueDate %></td>
-          <!-- <td style="color: green;">Approved</td> -->
-          <td>
+         <td>
           <div class="data">
             <% if (invoice.status === 0) { %>
-              <!-- <span style="color: red;"> <h5 ><%= invoices.status %></h5></span> -->
               <span style="color: red;"> <h5 >Pending</h5></span>
-              <% } else if (invoice.status === 1) { %>
-                <span style="color: green;"><h5 >Approved</h5></span> 
-              <% }  else if (invoice.status === 2) { %>
+              <% } else if(invoice.status === 1) { %>
+                <span style="color: green;"><h5 >Approved</h5></span>
+              <% } else if(invoice.status === 2) { %>
                 <span style="color: purple;"><h5 >Purchased</h5></span> 
-                <% }else if (invoice.status === 3) { %>
-                  <span style="color: brown;"><h5 >Placed</h5></span>
-                  <% } %>
-           </div>
+                  <% } else if(invoice.status === 3) { %>
+                    <span style="color: red;"><h5 >Placed</h5></span> 
+                      <% } %>
+
+              
+
+           </div> 
         </td>
           <td>
             <!-- Your existing code -->
 <td>
-  <form  action="/buy-now/<%= invoice._id %>" method="POST"> <!-- Change the link to a form for POST request -->
-    <a href="/bid">Place Bid</a>
-                     <input type="hidden" name="seller_email" value="<%= invoice.seller_email %>" />
-                     <input type="hidden" name="buyNowPrice" value= "<%= invoice.buyNowPrice %>" />
-    <button type="submit" class="buy-now-button">Buy Now</button>
-   
-   
-    
+  
+  
+    <!-- Fetching bid status using JavaScript or via your frontend framework -->
+<form  action="/buy-now/<%= invoice._id %>" method="POST">
+      <!-- Change the link to a form for POST request -->
      
-  </form>
+        <a href="/bid">Place Bid</a>
+    
+      
+    
+                      <input type="hidden" name="seller_email" value="<%= invoice.seller_email %>" />
+                      <input type="hidden" name="buyNowPrice" value= "<%= invoice.buyNowPrice %>" />
+     <button type="submit" class="buy-now-button">Buy Now</button>
+ </form>
+  
+
   
 </td>
 <!-- Your existing code -->

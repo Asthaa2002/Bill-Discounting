@@ -150,8 +150,22 @@ exports.viewInvoice = (req, res) => {
 };
 
 exports.getbid = (req,res,next)=>{
-  Invoice.find({ status: 1 })
-  .then(approvedInvoices => {
+  // Invoice.find({ status: 1 })
+  // .then(approvedInvoices => {
+    Invoice.find().then(approvedInvoices=>{
+      approvedInvoices.forEach(inv=>{
+        if(inv?.invStatus == '0')
+          inv.invStatus = 'Pending'
+        if(inv?.invStatus == '1')
+          inv.invStatus == 'Approved'
+        if(inv?.invStatus == '2')
+          inv.invStatus == 'Purchased' 
+      })
+      approvedInvoices.forEach(bid=>{
+        if(bid?.bidStatus == '3')
+          bid.bidStatus = 'Placed'
+      })
+  
     // console.log('line 206',approvedInvoices)
     res.render('investor/bidform', {
       approvedInvoices,
@@ -175,6 +189,12 @@ exports.submitBid = async (req, res) => {
     const investor = await User.findOne({ role: 'investor' }, '_id');
     const investorId = investor._id;
     console.log('Investor ID:', investorId, invoiceId);
+
+    const updateBidStatus = await Invoice.findByIdAndUpdate(invoiceId, { status: 3 }, { new: true });
+
+    if (!updateBidStatus) {
+      return res.status(404).send('Invoice not found');
+    }
    
     const { amount } = req.body;
     const createNew = await Bid.create({
@@ -326,9 +346,40 @@ exports.approveInvoice = async (req, res) => {
 // Controller for displaying approved invoices on the next page
 
 exports.displayApprovedInvoices = (req, res, next) => {
-  // console.log("i m here")
-  Invoice.find({ status: 1 })
-    .then(approvedInvoices => {
+  Invoice.find().then(approvedInvoices=>{
+    approvedInvoices.forEach(inv=>{
+      if(inv?.invStatus == '0')
+        inv.invStatus = 'Pending'
+      if(inv?.invStatus == '1')
+        inv.invStatus == 'Approved'
+      if(inv?.invStatus == '2')
+        inv.invStatus == 'Purchased' 
+    if(inv?.invStatus == '3')
+    inv.invStatus == 'Placed' 
+})
+
+
+    // Bid.find().then(bids => {
+    //   console.log("abc");
+    //   bids.forEach(bid => {
+    //     if (bid?.bidStatus === 'placed') {
+    //       console.log('Bid placed finally !!');
+    //       bid.bidStatus = 'Placed';
+    //       bid.save()
+    //         .then(updatedBid => {
+    //           console.log('Bid status updated:', updatedBid);
+    //         })
+    //         .catch(err => {
+    //           console.error('Error updating bid status:', err);
+    //         });
+    //     }
+    //   });
+    // }).catch(err => {
+    //   console.error('Error finding bids:', err);
+    //   // Handle the error accordingly
+    // });
+    
+    // .then(approvedInvoices => {
       // console.log('line 206',approvedInvoices)
       res.render('investor/display', {
         approvedInvoices,
