@@ -28,10 +28,11 @@ exports.getHome = (req,res,next) => {
 
 exports.gethomepage = (req, res) => {
   const previousInvoices = [];
-  Invoice.find().then(invoices=>{
+  let email = req.session.user.email
+  Invoice.find({ seller_email: email}).then(invoices=>{
     invoices.forEach(inv=>{
-      if(inv?.invStatus == '0')
-        inv.invStatus = 'Pending'
+      if(inv?.status == '0')
+        inv.status = 'Pending'
     })
     res.render('seller/homepage', { 
     
@@ -46,12 +47,13 @@ exports.gethomepage = (req, res) => {
 };
 exports.getlist = (req, res) => {
   const previousInvoices = [];
-  Invoice.find().then(invoices=>{
+  let email = req.session.user.email
+  Invoice.find({ buyerEmail: email }).then(invoices=>{
     invoices.forEach(inv=>{
-      if(inv?.invStatus == '0')
-        inv.invStatus = 'Pending'
-      if(inv?.invStatus == '1')
-        inv.invStatus == 'Approved'
+      if(inv?.status == '0')
+        inv.status = 'Pending'
+      if(inv?.status == '1')
+        inv.status == 'Approved'
     })
     res.render('buyer/list', { 
       previousInvoices: invoices,
@@ -91,9 +93,18 @@ exports.getlist = (req, res) => {
 // }
 
 exports.getAccounts = (req, res, next) => {
-  const userEmail = req.user.email; // Assuming user email is stored in req.user.email after login
-
-  Wallet.findOne({ user_email: userEmail }).then(wallet => {  
+  // const userEmail = req.user.email; 
+  // Assuming user email is stored in req.user.email after login
+  let email = req.session.user.email
+   let user = req.session.user;
+  User.findOne({email:email})
+    .then(user => {
+      if (!user) {
+        // Handle case where user is not found
+        return res.status(404).send('User not found');
+      }
+    })
+  Wallet.findOne({ user_email: email }).then(wallet => {  
     // console.log('Wallet:', wallet);
  
     Ledger.find({ wallet_id: wallet._id }).then(ledger => {
@@ -104,6 +115,7 @@ exports.getAccounts = (req, res, next) => {
         pageTitle: "Accounts & Transaction",
         isAuthenticated: req.session.isLoggedIn,
         wallet: wallet,
+        user:user,
         ledger: ledger
       };
 
@@ -154,12 +166,12 @@ exports.getbid = (req,res,next)=>{
   // .then(approvedInvoices => {
     Invoice.find().then(approvedInvoices=>{
       approvedInvoices.forEach(inv=>{
-        if(inv?.invStatus == '0')
-          inv.invStatus = 'Pending'
-        if(inv?.invStatus == '1')
-          inv.invStatus == 'Approved'
-        if(inv?.invStatus == '2')
-          inv.invStatus == 'Purchased' 
+        if(inv?.status == '0')
+          inv.status = 'Pending'
+        if(inv?.status == '1')
+          inv.status == 'Approved'
+        if(inv?.status == '2')
+          inv.status == 'Purchased' 
       })
       approvedInvoices.forEach(bid=>{
         if(bid?.bidStatus == '3')
@@ -246,6 +258,7 @@ exports.postinvoice = (req, res,next) => {
     issueDate,
     dueDate,
     buyNowPrice,
+    buyerEmail,
     productName,
     productDetails, 
     invoiceStatus
@@ -255,6 +268,12 @@ exports.postinvoice = (req, res,next) => {
 // console.log(req.body);
 // console.log(image);
 const imageUrl = image.path;
+
+User.find({email:buyerEmail}).then(buyer=>{
+  if(!buyer){
+    res.status(400).json({ error: 'No buyer exist with this email' });
+  }
+
 
 // let today = new Date().toString()
 
@@ -272,6 +291,7 @@ const imageUrl = image.path;
     dueDate:dueDate,
     buyNowPrice:buyNowPrice,
     productName:productName,
+    buyerEmail:buyerEmail,
     seller_email:seller_email,
     productDetails:productDetails,
     imageUrl:imageUrl,
@@ -295,6 +315,12 @@ const imageUrl = image.path;
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
     });
+
+  }).catch(err=>{
+    console.log(err)
+    res.status(500).json({ error: 'Internal Server Error' });
+  })
+  
 };
 
 
@@ -346,18 +372,27 @@ exports.approveInvoice = async (req, res) => {
 // Controller for displaying approved invoices on the next page
 
 exports.displayApprovedInvoices = (req, res, next) => {
+  let final_invoices = []
+  let email = req.session.user.email
   Invoice.find().then(approvedInvoices=>{
     approvedInvoices.forEach(inv=>{
-      if(inv?.invStatus == '0')
-        inv.invStatus = 'Pending'
-      if(inv?.invStatus == '1')
-        inv.invStatus == 'Approved'
-      if(inv?.invStatus == '2')
-        inv.invStatus == 'Purchased' 
-    if(inv?.invStatus == '3')
-    inv.invStatus == 'Placed' 
-})
+      if(inv?.status == '0')
+        inv.status = 'Pending'
+      if(inv?.status == '1')
+        inv.status == 'Approved'
+      if(inv?.status == '2')
+        inv.status == 'Purchased' 
+    if(inv?.status == '3')
+    inv.status == 'Placed' 
 
+    if(inv.status == 'Purchased' ){
+      if(inv.investorEmail == email){
+        final_invoices.push(inv)
+      }
+    } else {
+      final_invoices.push(inv)
+    }
+})
 
     // Bid.find().then(bids => {
     //   console.log("abc");
@@ -382,7 +417,7 @@ exports.displayApprovedInvoices = (req, res, next) => {
     // .then(approvedInvoices => {
       // console.log('line 206',approvedInvoices)
       res.render('investor/display', {
-        approvedInvoices,
+        approvedInvoices:final_invoices,
         path:"/displayInvoices",
         pageTitle: 'Display-list', 
         isAuthenticated: req.session.isLoggedIn
@@ -394,129 +429,75 @@ exports.displayApprovedInvoices = (req, res, next) => {
     });
 };
 
-
-// exports.renderInvoicePayment = (req, res) => {
-//   Invoice.findById(req.params.invoiceId)
-//     .then(invoice => {
-//       res.render('invoice_payment', {
-//         invoiceId: invoice._id,
-//         invoiceNumber: invoice.invoiceNumber,
-//         amount: invoice.amount,
-//         stripePublishableKey: STRIPE_PUBLISHABLE_KEY,
-//       });
-//     })
-//     .catch(error => {
-//       console.log(error.message);
-//       res.render('error');
-//     });
-// };
-
-// exports.handleInvoicePayment = (req, res) => {
-//   stripe.customers.create({
-//     email: req.body.stripeEmail,
-//     source: req.body.stripeToken,
-//     // Additional customer details
-//   })
-//   .then(customer => {
-//     return stripe.charges.create({
-//       amount: req.body.amount * 100,
-//       currency: 'INR',
-//       description: req.body.description,
-//       customer: customer.id,
-//       // Additional charge details
-//     });
-//   })
-//   .then(charge => {
-//     // Handle successful payment - update invoice status or other actions
-//     res.redirect('/success');
-//   })
-//   .catch(error => {
-//     console.log(error.message);
-//     res.redirect('/failure');
-//   });
-// };
-
-
-
-
-
-
-exports.postBuyNow = async(req, res, next) => {
+exports.postBuyNow = async (req, res, next) => {
   try {
     const { buyNowPrice } = req.body;
     const seller_email = req.body.seller_email;
     const investor_email = req.user.email; // Assuming user email is available in req.user
     const invoiceId = req.params.invoiceId;
-     // Assuming invoiceId is available in params
-    //  console.log('line 315',req.body);
-    //  console.log( 'line 316',req.params);
-    //  console.log( 'line 317',req.user);
-
+   
     const sellerWallet = await Wallet.findOne({ user_email: seller_email });
     const investorWallet = await Wallet.findOne({ user_email: investor_email });
 
     if (!sellerWallet || !investorWallet) {
-      return res.status(404).send('Seller or Investor wallet not found');
+      return res.status(404).send("Seller or Investor wallet not found");
     }
-    if(parseFloat(investorWallet.wallet_balance) < buyNowPrice){
-      return res.status(401).send('Insufficient Funds');
+    if (parseFloat(investorWallet.wallet_balance) < buyNowPrice) {
+      return res.status(401).send("Insufficient Funds");
     }
 
-    investorWallet.wallet_balance = parseFloat(investorWallet.wallet_balance)
-    sellerWallet.wallet_balance = parseFloat(sellerWallet.wallet_balance)
+    investorWallet.wallet_balance = parseFloat(investorWallet.wallet_balance);
+    sellerWallet.wallet_balance = parseFloat(sellerWallet.wallet_balance);
 
-    var opening_balance_investor = investorWallet.wallet_balance
-    var opening_balance_seller = sellerWallet.wallet_balance
+    var opening_balance_investor = investorWallet.wallet_balance;
+    var opening_balance_seller = sellerWallet.wallet_balance;
 
     sellerWallet.wallet_balance += parseFloat(buyNowPrice);
     investorWallet.wallet_balance -= parseFloat(buyNowPrice);
 
-    var closing_balance_investor = investorWallet.wallet_balance
-    var closing_balance_seller = sellerWallet.wallet_balance
+    var closing_balance_investor = investorWallet.wallet_balance;
+    var closing_balance_seller = sellerWallet.wallet_balance;
 
     var ledgerEntryInvestor = {
       wallet_id: investorWallet._id,
-      opening_balance : opening_balance_investor,
-      closing_balance : closing_balance_investor,
-      trx_amt : parseFloat(buyNowPrice),
-      trx_type : 'DEBIT'
-    }
+      opening_balance: opening_balance_investor,
+      closing_balance: closing_balance_investor,
+      trx_amt: parseFloat(buyNowPrice),
+      trx_type: "DEBIT",
+    };
 
     var ledgerEntrySeller = {
       wallet_id: sellerWallet._id,
-      opening_balance : opening_balance_seller,
-      closing_balance : closing_balance_seller,
-      trx_amt : parseFloat(buyNowPrice),
-      trx_type : 'CREDIT'
-    }
+      opening_balance: opening_balance_seller,
+      closing_balance: closing_balance_seller,
+      trx_amt: parseFloat(buyNowPrice),
+      trx_type: "CREDIT",
+    };
 
     var ledgerEntryInvestor = new Ledger(ledgerEntryInvestor);
     var ledgerEntrySeller = new Ledger(ledgerEntrySeller);
 
-
-    await Promise.all([sellerWallet.save(), investorWallet.save()]);
-    // console.log("i m here 2")
-    await Promise.all([ledgerEntrySeller.save(), ledgerEntryInvestor.save()]);
-
-
+    // await Promise.all([sellerWallet.save(), investorWallet.save()]);
+    // // console.log("i m here 2")
+    // await Promise.all([ledgerEntrySeller.save(), ledgerEntryInvestor.save()]);
 
     const invoice = await Invoice.findById(invoiceId);
     if (!invoice) {
-      return res.status(404).send('Invoice not found');
+      return res.status(404).send("Invoice not found");
     }
 
     invoice.status = 2;
-   
-    await invoice.save();
-
-    // Redirect to accounts page after successful transaction
-    res.redirect('/accounts');
+    invoice.investorEmail = investor_email;
+    await Promise.all([sellerWallet.save(), investorWallet.save()]);
+    await Promise.all([ledgerEntrySeller.save(), ledgerEntryInvestor.save()]);
+    await Promise.all([invoice.save()]);
+    
+    res.redirect("/accounts");
   } catch (error) {
-    console.error('Error processing buy now:', error);
-    res.status(500).send('Transaction failed');
+    console.error("Error processing buy now:", error);
+    res.status(500).send("Transaction failed");
   }
 };
-
 
 exports.createOrder = async (req, res) => {
   try {

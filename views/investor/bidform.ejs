@@ -1,3 +1,65 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/bidform.css">
+
+</head>
+<body>
+</head>
+<body>
+
+<header class="main-header">
+        <button id="side-menu-toggle">Menu</button>
+        <nav class="main-header__nav">
+            <ul class="main-header__item-list">
+                <li class="main-header__item" id="bill_icon">
+                    <i class="fa-regular fa-money-bill-1"></i>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a>
+                </li>
+
+                <% if (isAuthenticated) { %>
+
+                  <li class="main-header__item">
+                    <a class="<%= path === '/displayInvoices' ? 'active' : '' %>" href="/displayInvoices">Investor</a>
+                </li>
+
+                <li class="main-header__item">
+                        <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
+                 </li>
+
+                    <% } %>
+                   
+                    
+                
+            </ul>
+            <ul class="main-header__item-list">
+              <% if (!isAuthenticated) { %>
+                    <li class="main-header__item">
+                        <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                    </li>
+                    <li class="main-header__item">
+                        <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
+                    </li>
+                    <% } else { %>
+              
+                    <li class="main-header__item">
+                        <form action="/logout" method="post">
+                            
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                    <% } %>
+            </ul>
+        </nav>
+    </header>
+         
+
+
+
+
+
+
 <main class="main-container">
   <% if (approvedInvoices.length > 0) { %>
     <table class="invoice-table">

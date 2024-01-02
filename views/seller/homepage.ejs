@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <header class="main-header">
+<header class="main-header">
         <button id="side-menu-toggle">Menu</button>
         <nav class="main-header__nav">
             <ul class="main-header__item-list">
@@ -19,13 +19,14 @@
                 </li>
 
                 <% if (isAuthenticated) { %>
+
                 <li class="main-header__item">
                     <a class="<%= path === '/seller/homepage' ? 'active' : '' %>" href="/seller/homepage">Seller</a>
                 </li>
                 
-                    <li class="main-header__item">
+                <li class="main-header__item">
                         <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
-                    </li>
+                 </li>
 
                     <% } %>
                    
@@ -73,7 +74,7 @@
   </div>
  
 
-  <h2 >Previous Invoices</h2>
+  <h1 class="prev_inv_heading">Previous Invoices</h1>
 
   <div class="main_invoice_data">
 
@@ -90,6 +91,9 @@
        </div>
        <div class="data" id="heading_invoice">
         <h4 >Invoice Amount</h4>
+       </div>
+       <div class="data" id="heading_invoice">
+        <h4 >Buyer Info</h4>
        </div>
        <div class="data" id="heading_invoice">
         <h4 >Issue Date</h4>
@@ -134,16 +138,19 @@
        <h5 > <%= invoices.invoiceAmount %></h5>
       </div>
       <div class="data">
+        <h5 > <%= invoices.buyerEmail %></h5>
+       </div>
+      <div class="data">
        <h5 ><%= invoices.issueDate %></h5>
       </div>
       <div class="data">
         <% if (invoices.status === 0) { %>
           <!-- <span style="color: red;"> <h5 ><%= invoices.status %></h5></span> -->
-          <span style="color: red;"> <h5 >Pending</h5></span>
+          <span style="color: red;"> <h4 >Pending</h4></span>
           <% } else if (invoices.status === 1) { %>
-            <span style="color: green;"><h5 >Approved</h5></span> 
+            <span style="color: green;"><h4 >Approved</h4></span> 
           <% } else if (invoices.status ===2) { %>
-            <span style="color: purple;"><h5 >Purchased</h5></span> 
+            <span style="color: purple;"><h4 >Purchased</h4></span> 
             <% } %>
        </div>
       <div class="data">

@@ -9,6 +9,14 @@ const invoiceSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    buyerEmail: {
+        type: String,
+        required: true
+    },
+    investorEmail: {
+        type: String,
+        required: false
+    },
     issueDate: {
         type: Date,
         required: true

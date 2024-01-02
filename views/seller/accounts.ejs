@@ -1,15 +1,71 @@
 <%- include('../includes/head.ejs') %>
 <link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/account.css">
 
 <!-- <link href="https://fonts.googleapis.com/css?family=Baloo+Bhai&display=swap" rel="stylesheet"> -->
 
 </head>
 <body>
    
-        
-    <%- include('../includes/navigation.ejs') %>
-</nav>
+  <header class="main-header">
+    <button id="side-menu-toggle">Menu</button>
+    <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+            <li class="main-header__item" id="bill_icon">
+                <i class="fa-regular fa-money-bill-1"></i>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a>
+            </li>
+            <% if (isAuthenticated) { %>
 
+              <% if (user.role === "seller") { %>
+                <li class="main-header__item">
+                  <a class="<%= path === '/seller/homepage' ? 'active' : '' %>" href="/seller/homepage">Seller</a>
+              </li>
+              <li class="main-header__item">
+                <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
+            </li>
+                <% } else if(user.role === "buyer") { %>
+                  
+                <li class="main-header__item">
+                  <a class="<%= path === '/buyer/list' ? 'active' : '' %>" href="/buyer/list">Buyer</a>
+              </li>
+                  <li class="main-header__item">
+                    <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
+                </li>
+                <% } else if(user.role === "investor") { %>
+                  <li class="main-header__item">
+                    <a class="<%= path === '/displayInvoices' ? 'active' : '' %>" href="/displayInvoices">Investor</a>
+                </li>
+                  <li class="main-header__item">
+                    <a class="<%= path === '/accounts' ? 'active' : '' %>" href="/accounts">Accounts&Transaction</a>
+                </li>
+                        <% } %>
+
+                <% } %>   
+        </ul>
+        <ul class="main-header__item-list">
+          <% if (!isAuthenticated) { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup">Signup</a>
+                </li>
+                <% } else { %>
+          
+                <li class="main-header__item">
+                    <form action="/logout" method="post">
+                        
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+                <% } %>
+        </ul>
+    </nav>
+</header>
+     
      
      <main>
         <h1>Welcome to the Accounts page</h1>
@@ -18,16 +74,15 @@
           <h2>Wallet Information</h2>
           <p>Wallet ID: <%= wallet._id %></p>
           <p>Balance: <%= wallet.wallet_balance %></p>
-          <div style="display:inline-block">
-
-            <form class="pay-form">
-              <input type="hidden" name="name" value="Shoes">
-              <input type="hidden" name="amount"  required>
-              <input type="hidden" name="description" value="Shoes Buying">
-              <button type="submit">Recharge Your Wallet</button>
-            </form>
-          </div>
+          <div>
+          <form class="pay-form">
+            <input type="hidden" name="name" value="Shoes">
+            <input type="hidden" name="amount"  required>
+            <input type="hidden" name="description" value="Shoes Buying">
+            <button type="submit">Recharge Your Wallet</button>
+          </form>
         </div>
+         
         <div>
           <!-- Display Ledger Information -->
 <h2>Ledger Entries</h2>

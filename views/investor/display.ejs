@@ -128,20 +128,17 @@
   
   
     <!-- Fetching bid status using JavaScript or via your frontend framework -->
-<form  action="/buy-now/<%= invoice._id %>" method="POST">
-      <!-- Change the link to a form for POST request -->
-     
-        <a href="/bid">Place Bid</a>
-    
-      
-    
-                      <input type="hidden" name="seller_email" value="<%= invoice.seller_email %>" />
-                      <input type="hidden" name="buyNowPrice" value= "<%= invoice.buyNowPrice %>" />
-     <button type="submit" class="buy-now-button">Buy Now</button>
- </form>
-  
 
   
+ <form action="/buy-now/<%= invoice._id %>" method="POST">
+ <a href="/bid">Place Bid</a>
+ <input type="hidden" name="seller_email" value="<%= invoice.seller_email %>" />
+  <input type="hidden" name="buyNowPrice" value="<%= invoice.buyNowPrice %>" />
+  <button type="submit" class="buy-now-button">Buy Now</button>
+  </form>
+  
+ 
+
 </td>
 <!-- Your existing code -->
 
